@@ -82,3 +82,5 @@ Minor in DSML, IITMandi x Masai, Batch 1
 Std_ID: IITMCS_2406170  
 
 © All rights reserved.
+
+"[test_link_samsungS24](https://www.flipkart.com/samsung-galaxy-s24-5g-snapdragon-amber-yellow-128-gb/product-reviews/itmd4baa945a78ef?pid=MOBHDVFKSZNEZGXW&lid=LSTMOBHDVFKSZNEZGXWFNGEN2&marketplace=FLIPKART&page=1)"
