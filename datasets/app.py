@@ -88,3 +88,7 @@ def predict_sentiment_api():
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'ok', 'message': 'API is running'}), 200
+
+if __name__ == '__main__':
+    # Listen on all interfaces so Docker can map the port
+    app.run(host='0.0.0.0', port=5000)
