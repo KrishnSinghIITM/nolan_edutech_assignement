@@ -1,5 +1,5 @@
-```markdown
-# Automated Review Data Scraping — Toolkit Subsection
+
+# Automated Product Review Data Scraping Tool
 
 ---
 
@@ -77,7 +77,8 @@ This toolkit subsection automates scraping product reviews from Flipkart, conver
 
 ## Author & Copyright
 
-Made by [translate:Krishn Singh]  
+Made by [Krishn SIngh](https://github.com/KrishnSinghIITM) 
+
 Minor in DSML, IITMandi x Masai, Batch 1  
 Std_ID: IITMCS_2406170  
 
