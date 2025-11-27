@@ -13,13 +13,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Download NLTK data (stopwords and wordnet) during image build to avoid runtime downloads
 RUN python -c "import nltk; nltk.download('stopwords', quiet=True); nltk.download('wordnet', quiet=True)"
 
-# Create a directory for saved models inside the container
-RUN mkdir -p /app/saved_models
+# Create a directory for models inside the container (app.py expects `models`)
+RUN mkdir -p /app/models
 
 # Copy the model and vectorizer files from datasets folder into the container
-COPY Multinomial_Naive_Bayes_smote_model.joblib /app/saved_models/
-COPY tfidf_title.joblib /app/saved_models/
-COPY tfidf_text.joblib /app/saved_models/
+COPY Multinomial_Naive_Bayes_smote_model.joblib /app/models/
+COPY tfidf_title.joblib /app/models/
+COPY tfidf_text.joblib /app/models/
 
 # Copy the Flask application file into the container at /app
 COPY app.py /app/
