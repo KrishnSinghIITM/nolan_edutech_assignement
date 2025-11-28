@@ -806,12 +806,12 @@
                     <div class="solid-divider" style="margin-top: 15px;"></div>
 
                     <!-- Logs: 5 Lines -->
-                    <div class="logs-container" style="margin-top: 5px;">
-                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
-                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
-                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
-                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
-                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                    <div class="logs-container" style="margin-top: 5px;" id="predict_logs">
+                        <div class="logs-row"><span class="terminal-text" id="predict_log_0"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">Initializing...</span></span></div>
+                        <div class="logs-row"><span class="terminal-text" id="predict_log_1"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">Waiting for input...</span></span></div>
+                        <div class="logs-row"><span class="terminal-text" id="predict_log_2"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">Idle</span></span></div>
+                        <div class="logs-row"><span class="terminal-text" id="predict_log_3"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">Idle</span></span></div>
+                        <div class="logs-row"><span class="terminal-text" id="predict_log_4"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">Idle</span></span></div>
                     </div>
 
                     <!-- Solid Divider -->
@@ -958,22 +958,52 @@
                 return;
             }
 
+            // Start simulated logs and keep their timers so we can cancel if needed
+            const logSteps = [
+                'Taking input...',
+                'Cleaning text...',
+                'Tokenizing...',
+                'Generating embeddings...',
+                'Predicting...'
+            ];
+
+            let logTimers = [];
+            const setLogLine = (i, msg) => {
+                const el = document.getElementById('predict_log_' + i);
+                if (!el) return;
+                el.innerHTML = `<span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">${msg}</span>`;
+            };
+
+            // clear previous logs
+            for (let i = 0; i < 5; ++i) setLogLine(i, '');
+
+            logSteps.forEach((step, idx) => {
+                const t = setTimeout(() => setLogLine(idx, step), 300 * idx + 100);
+                logTimers.push(t);
+            });
+
             try {
-                // Use relative path so same-origin requests go to this server.
-                // When using `run_local.py` this will proxy to the model API.
                 const res = await fetch('/predict', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ review_title: title, review_text: review_text })
                 });
 
+                // Cancel remaining timers (if any)
+                logTimers.forEach(clearTimeout);
+
                 if (!res.ok) {
                     const text = await res.text();
+                    // show error in logs
+                    setLogLine(4, 'Error: ' + (text || res.statusText));
                     throw new Error(text || res.statusText);
                 }
 
                 const data = await res.json();
                 const predicted = (data.predicted_sentiment || '').toLowerCase();
+
+                // show done
+                setLogLine(4, 'Done');
 
                 // reset stars
                 for (let s of stars) s.className = 'star';
@@ -1004,6 +1034,8 @@
                 console.error('Predict error', err);
                 textEl.innerText = 'Prediction failed';
                 textEl.className = 'sent-neu';
+                // mark final log line as failed if not already set
+                setLogLine(4, 'Failed');
             } finally {
                 btn.innerText = "< Predict >";
                 btn.style.cursor = "pointer";
