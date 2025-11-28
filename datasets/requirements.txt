@@ -6,3 +6,4 @@ scipy
 pandas
 numpy
 imblearn
+flask-cors

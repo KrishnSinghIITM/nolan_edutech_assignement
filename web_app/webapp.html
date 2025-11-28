@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Wireframe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+
+        :root {
+            /* Light Mode Variables */
+            --bg-color: #f4f4f9;          
+            --container-bg: #ffffff;      
+            --header-bg: #e0e0e0;
+            --border-color: #000000;      
+            
+            /* Text Hierarchy */
+            --text-heading: #000000;      
+            --text-label: #374151;        
+            --text-input: #6b7280;        
+            --text-placeholder: #9ca3af;  
+            
+            --btn-bg: #e0e0e0;
+            --btn-shadow: rgba(0,0,0,1);
+            
+            --border-width: 3px;          
+            --border-radius: 24px;        
+            
+            --font-main: 'Inter', sans-serif;
+            --font-term: 'Fira Code', monospace;
+            --shadow: 12px 12px 0px rgba(0,0,0,0.4); 
+        }
+
+        /* DARK MODE OVERRIDES */
+        body.dark-mode {
+            --bg-color: #000000;          
+            --container-bg: #111111;      
+            --header-bg: #050505;    
+            --border-color: #444444;      
+            
+            --text-heading: #ffffff;      
+            --text-label: #d1d5db;        
+            --text-input: #9ca3af;        
+            --text-placeholder: #6b7280;  
+            
+            --btn-bg: #222222;
+            --btn-shadow: rgba(0,0,0,0.5);
+            --shadow: 12px 12px 0px rgba(255,255,255,0.08); 
+        }
+
+        /* Override: Keep Dashboard White in Dark Mode */
+        body.dark-mode .dashboard-content-area {
+            background-color: #ffffff !important;
+            color: #111111 !important;
+        }
+
+        /* SENTIMENT TEXT COLORS */
+        /* Light Mode (Darker shades) */
+        .sent-pos { color: #15803d; } /* Dark Green */
+        .sent-neu { color: #c2410c; } /* Dark Orange */
+        .sent-neg { color: #b91c1c; } /* Dark Red */
+
+        /* Dark Mode (Vivid Colors) */
+        body.dark-mode .sent-pos { color: #4ade80; text-shadow: 0 0 10px rgba(74, 222, 128, 0.2); } 
+        body.dark-mode .sent-neu { color: #fb923c; text-shadow: 0 0 10px rgba(251, 146, 60, 0.2); } 
+        body.dark-mode .sent-neg { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.4); } 
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--bg-color);
+            font-family: var(--font-main);
+            overflow: hidden; 
+            transition: background-color 0.3s ease;
+        }
+
+        .app-container {
+            width: 98vw; 
+            height: 96vh; 
+            background-color: var(--container-bg);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--border-radius);
+            display: flex;
+            overflow: hidden; 
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-section {
+            flex: 2.2; 
+            border-right: var(--border-width) solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            flex: 0.83; 
+            display: flex;
+            flex-direction: column;
+            min-width: 350px; 
+        }
+
+        .sidebar-top {
+            flex: 0 0 auto; 
+            border-bottom: var(--border-width) solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: visible;
+        }
+
+        .sidebar-bottom {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 0 10px; 
+            border-bottom: var(--border-width) solid var(--border-color);
+            height: 50px; 
+            display: flex;
+            align-items: center;
+            background-color: var(--header-bg);
+            flex-shrink: 0;
+            transition: background-color 0.3s ease;
+            position: relative; 
+            justify-content: space-between; 
+        }
+
+        .header-title {
+            font-size: 1.35rem; 
+            font-weight: 700;
+            color: var(--text-heading); 
+        }
+
+        /* --- Dashboard Header Icons --- */
+        .dashboard-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-right: 5px;
+        }
+
+        .icon-btn {
+            cursor: pointer;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s ease, color 0.3s ease;
+        }
+        
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.5;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 15px 20px;
+            background-color: var(--container-bg);
+            color: var(--text-label); 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dashboard specific content class for the white override */
+        .dashboard-content-area {
+            background-color: #ffffff; 
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Dashboard State Views --- */
+        .dashboard-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.3s ease;
+        }
+        
+        .dashboard-view.hidden {
+            display: none;
+            opacity: 0;
+        }
+
+        .big-icon {
+            width: 120px;
+            height: 120px;
+            color: #d1d5db; 
+        }
+
+        .error-icon {
+            width: 150px;
+            height: 150px;
+            color: #ef4444; 
+            opacity: 0.2; 
+        }
+
+        .report-placeholder {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #6b7280;
+            font-size: 1.2rem;
+            background-color: #f9fafb;
+        }
+
+        /* --- Hamburger Icon --- */
+        .mode-toggle-icon {
+            width: 24px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .sidebar-top .header {
+            justify-content: space-between;
+        }
+
+        .bar {
+            width: 100%;
+            height: 3px;
+            background-color: var(--text-heading);
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* --- Modal Styles (Standard Clean) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: var(--container-bg);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px; 
+            width: 400px;
+            box-shadow: var(--shadow);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-heading);
+            text-align: left; 
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            margin: 25px 0; 
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-primary);
+            font-family: var(--font-term);
+            font-size: 1rem;
+            text-align: left; 
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--text-heading);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            border: 2px solid var(--border-color);
+            transition: all 0.2s ease;
+            text-align: center;
+            flex: initial; 
+        }
+        
+        .modal-btn.cancel { 
+            background: transparent; 
+            color: var(--text-heading); 
+            border-color: var(--text-label);
+        }
+        .modal-btn.cancel:hover {
+            background: rgba(128,128,128,0.1);
+        }
+
+        .modal-btn.confirm { 
+            background: var(--text-heading); 
+            color: var(--bg-color); 
+            border-color: var(--text-heading);
+        }
+        .modal-btn.confirm:hover {
+            opacity: 0.9;
+        }
+
+
+        /* --- Input Alignment Styles --- */
+        .section-subtitle {
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 1.125rem; 
+            color: var(--text-heading);
+        }
+
+        .solid-divider {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 15px; 
+            margin-left: -20px; 
+            margin-right: -20px; 
+            width: calc(100% + 40px); 
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center; 
+            justify-content: space-between; 
+            margin-bottom: 16px; 
+            white-space: nowrap;
+        }
+
+        .label {
+            margin-right: 8px;
+            color: var(--text-label); 
+            font-weight: 600;
+            flex-shrink: 0; 
+            font-size: 1.125rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; 
+            color: var(--text-placeholder);
+            font-style: italic;
+            width: 55%; 
+        }
+
+        .bracket {
+            color: var(--text-placeholder); 
+            font-weight: normal;
+            user-select: none; 
+            font-size: 0.95rem; 
+        }
+
+        input[type="text"] {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 0.95rem; 
+            color: var(--text-input); 
+            font-style: normal;
+            flex-grow: 1;
+            width: 100%; 
+            outline: none;
+            padding: 0 4px; 
+            margin: 0;
+            text-align: center; 
+        }
+        
+        input::placeholder {
+            color: var(--text-input-placeholder);
+            font-style: italic;
+            opacity: 1;
+            text-align: center; 
+        }
+
+        .no-bracket-input {
+            padding: 0;
+            text-align: center; 
+        }
+
+        /* Logs Section */
+        .logs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .logs-row {
+            display: flex;
+            align-items: center; 
+            justify-content: flex-start;
+            width: 100%;
+            overflow: hidden; 
+        }
+
+        .terminal-text {
+            font-family: var(--font-term);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        /* UPDATED COLORS FOR LIGHT MODE */
+        .t-user { color: #7e22ce; font-weight: 700; } /* Purple */
+        .t-grey { color: #6b7280; }
+        .t-path { color: #0f766e; font-weight: 600; } /* Teal */
+        .t-cmd  { color: #b91c1c; font-weight: 600; } /* Brick Red */
+
+        /* Dark Mode Log Colors */
+        body.dark-mode .t-user { color: #4ade80; }
+        body.dark-mode .t-path { color: #38bdf8; }
+        body.dark-mode .t-cmd  { color: #fb923c; }
+        body.dark-mode .t-grey { color: #9ca3af; }
+
+        .dotted-divider {
+            border: none;
+            border-top: 2px solid var(--border-color); 
+            margin: 10px -20px; 
+            width: calc(100% + 40px);
+        }
+
+        .btn-wrapper {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 0px; 
+            margin-top: 5px; 
+        }
+
+        .action-btn {
+            background: var(--btn-bg);
+            border: 2px solid var(--border-color);
+            padding: 5px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-family: inherit;
+            color: var(--text-heading);
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 2px 2px 0px var(--btn-shadow);
+            min-width: 150px; 
+            transition: all 0.1s ease;
+        }
+
+        .action-btn:active {
+             box-shadow: 0px 0px 0px var(--btn-shadow);
+             transform: translateY(2px);
+        }
+
+        /* --- Sentiment Section --- */
+        .sentiment-group {
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sentiment-row {
+            display: flex;
+            align-items: center; 
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .sentiment-result {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            padding-top: 5px; 
+            padding-bottom: 0; 
+            width: 100%;
+        }
+
+        .sentiment-row .input-wrapper {
+            justify-content: flex-start;
+            width: auto;
+            flex-grow: 1;
+        }
+        .sentiment-row input[type="text"] {
+            text-align: right;
+        }
+        .sentiment-row input::placeholder {
+            text-align: right;
+        }
+        
+        .spacer-label {
+             margin-right: 8px;
+             font-size: 1.125rem;
+             font-weight: 600;
+             visibility: hidden;
+             flex-shrink: 0;
+        }
+
+        /* Star Styles */
+        .stars-container {
+            font-size: 1.8rem;
+            line-height: 1;
+            display: inline-flex;
+            gap: 2px;
+        }
+        .star {
+            color: transparent;
+            /* In Light Mode: Black Border */
+            -webkit-text-stroke: 1.5px var(--text-heading); 
+        }
+        .star.filled {
+            /* Keep the border in light mode for filled stars too */
+            -webkit-text-stroke: 1.5px var(--text-heading); 
+        }
+
+        /* Light Mode Star Colors - Shades */
+        /* Pos: Dark Greens */
+        .star.filled.pos.light-dark { color: #86efac; } /* Lighter green */
+        .star.filled.pos.medium-dark { color: #22c55e; } /* Med green */
+        .star.filled.pos.darkest { color: #15803d; } /* Deep green */
+
+        /* Neu: Dark Oranges */
+        .star.filled.neu.light-dark { color: #fdba74; }
+        .star.filled.neu.darkest { color: #c2410c; }
+
+        /* Neg: Dark Red */
+        .star.filled.neg.darkest { color: #b91c1c; }
+
+
+        /* DARK MODE STAR STYLES */
+        /* No border needed for dark mode glow effect */
+        body.dark-mode .star { -webkit-text-stroke: 1.5px #555; } 
+        body.dark-mode .star.filled { -webkit-text-stroke: 0; } 
+
+        /* Dark Mode Shading Logic (Opacity) */
+        body.dark-mode .star.light-dark { opacity: 0.4; }
+        body.dark-mode .star.medium-dark { opacity: 0.7; }
+        body.dark-mode .star.darkest { opacity: 1; }
+
+        /* Dark Mode Colors */
+        body.dark-mode .star.filled.pos { color: #4ade80; filter: drop-shadow(0 0 2px rgba(74, 222, 128, 0.5)); }
+        body.dark-mode .star.filled.neu { color: #fb923c; filter: drop-shadow(0 0 2px rgba(251, 146, 60, 0.5)); }
+        body.dark-mode .star.filled.neg { color: #ef4444; filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.5)); }
+
+    </style>
+</head>
+<body>
+
+    <!-- MODAL POPUP -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-content">
+            <div class="modal-title">Enter Report URL</div>
+            <input type="text" class="modal-input" id="reportUrlInput" placeholder="https://drive.google.com/..." />
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="submitUrl()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        
+        <!-- Left: Dashboard -->
+        <div class="dashboard-section">
+            <div class="header">
+                <div class="header-title">
+                    Dashboard
+                </div>
+                <!-- 3 ICONS: Upload, Eye, Download -->
+                <div class="dashboard-icons">
+                    <!-- Upload -->
+                    <div class="icon-btn" onclick="openModal()" title="Upload Report">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <!-- Eye (Toggle) -->
+                    <div class="icon-btn" onclick="toggleReport()" id="eyeBtn" title="Show/Hide Report">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <!-- Download -->
+                    <div class="icon-btn" onclick="downloadReport()" title="Download Report">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="content dashboard-content-area" id="dashboardContent">
+                
+                <!-- STATE 1: Default Icon -->
+                <div id="dashboard-default" class="dashboard-view">
+                    <svg class="big-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                        <path d="M7 10l2 2 4-4 3 3"></path>
+                    </svg>
+                </div>
+
+                <!-- STATE 2: Report View (Initially Hidden) -->
+                <div id="dashboard-report" class="dashboard-view hidden">
+                    <div class="report-placeholder">
+                        REPORT DATA LOADED
+                    </div>
+                </div>
+
+                <!-- STATE 3: Error View (Initially Hidden) -->
+                <div id="dashboard-error" class="dashboard-view hidden">
+                    <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                </div>
+
+                <!-- Report URL Box REMOVED -->
+
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="sidebar-section">
+            
+            <!-- Top Right: Reviews Scrapper -->
+            <div class="sidebar-top">
+                <div class="header">
+                    <div class="header-title">
+                        Reviews Scrapper
+                    </div>
+                    <!-- Hamburger Icon -->
+                    <div class="mode-toggle-icon" onclick="toggleMode()">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+                <div class="content">
+                    
+                    <div class="section-subtitle">Enter requested details:</div>
+                    <div class="solid-divider"></div>
+                    
+                    <!-- INPUTS -->
+                    <div class="input-row">
+                        <span class="label">Product Name :-</span>
+                        <div class="input-wrapper">
+                            <span class="bracket">&lt;</span>
+                            <input type="text" placeholder="e.g., Iphone15" />
+                            <span class="bracket">&gt;</span>
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <span class="label">E-commerce Website :-</span>
+                        <div class="input-wrapper">
+                            <span class="bracket">&lt;</span>
+                            <input type="text" placeholder="e.g., Flipkart" />
+                            <span class="bracket">&gt;</span>
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <span class="label">No of pages to scrape :-</span>
+                        <div class="input-wrapper">
+                            <span class="bracket">&lt;</span>
+                            <input type="text" placeholder="177" />
+                            <span class="bracket">&gt;</span>
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <span class="label">URL with ?page=1 :-</span>
+                        <div class="input-wrapper">
+                            <span class="bracket">&lt;</span>
+                            <input type="text" placeholder="url/..." />
+                            <span class="bracket">&gt;</span>
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <span class="label">Fetch date :-</span>
+                        <div class="input-wrapper">
+                            <span class="bracket">&lt;</span>
+                            <input type="text" placeholder="DDMMYY" />
+                            <span class="bracket">&gt;</span>
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <span class="label">Author name :-</span>
+                        <div class="input-wrapper">
+                            <span class="bracket">&lt;</span>
+                            <input type="text" placeholder="Krishn Singh" />
+                            <span class="bracket">&gt;</span>
+                        </div>
+                    </div>
+                    
+                    <div class="solid-divider" style="margin-top: 15px;"></div>
+
+                    <!-- LOGS: 5 Lines -->
+                    <div class="logs-container">
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/scrape</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/scrape</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/scrape</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/scrape</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/scrape</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                    </div>
+
+                    <!-- Now Solid Divider -->
+                    <div class="dotted-divider"></div>
+
+                    <div class="btn-wrapper">
+                        <button class="action-btn" id="fetchBtn" onclick="handleFetch()">&lt; Enter &gt;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Right: Sentiment Prediction -->
+            <div class="sidebar-bottom">
+                <div class="header">
+                    <div class="header-title">
+                        Sentiment Prediction
+                    </div>
+                </div>
+                <div class="content" style="display: flex; flex-direction: column;">
+                    
+                    <!-- Top Input (Review_Title) -->
+                    <div class="sentiment-group">
+                        <div class="sentiment-row">
+                            <span class="label">Review_Title :-</span>
+                            <div class="input-wrapper">
+                                <span class="bracket">&lt;</span>
+                                <input id="review_title_input" type="text" placeholder="............................................." />
+                                <span class="bracket">&gt;</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom Input (Review_Text, 3 separate lines) -->
+                    <div class="sentiment-group">
+                        <div class="sentiment-row">
+                            <span class="label">Review_Text :-</span>
+                            <div class="input-wrapper">
+                                <span class="bracket">&lt;</span>
+                                <input id="review_text_1" type="text" class="auto-tab" maxlength="45" placeholder="............................................." />
+                                <span class="bracket">&gt;</span>
+                            </div>
+                        </div>
+                        <div class="sentiment-row">
+                            <span class="spacer-label">Review_Text :-</span> 
+                            <div class="input-wrapper">
+                                <span class="bracket">&lt;</span>
+                                <input id="review_text_2" type="text" class="auto-tab" maxlength="45" placeholder="............................................." />
+                                <span class="bracket">&gt;</span>
+                            </div>
+                        </div>
+                        <div class="sentiment-row">
+                            <span class="spacer-label">Review_Text :-</span> 
+                            <div class="input-wrapper">
+                                <span class="bracket">&lt;</span>
+                                <input id="review_text_3" type="text" class="auto-tab" maxlength="45" placeholder="............................................." />
+                                <span class="bracket">&gt;</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Separator Line -->
+                    <div class="solid-divider" style="margin-top: 15px;"></div>
+
+                    <!-- Logs: 5 Lines -->
+                    <div class="logs-container" style="margin-top: 5px;">
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                        <div class="logs-row"><span class="terminal-text"><span class="t-user">@git_usr</span><span class="t-grey">-&gt;</span><span class="t-path">/log/predict</span><span class="t-grey">$</span><span class="t-cmd">&lt;............................................................&gt;</span></span></div>
+                    </div>
+
+                    <!-- Solid Divider -->
+                    <div class="dotted-divider"></div>
+
+                    <!-- Predict Button -->
+                    <div class="btn-wrapper" style="margin-top: 5px; margin-bottom: 5px;">
+                        <button class="action-btn" id="predictBtn" onclick="handlePredict()">&lt; Predict &gt;</button>
+                    </div>
+
+                    <!-- Solid Divider -->
+                    <div class="dotted-divider"></div>
+
+                    <!-- Sentiment Result Section -->
+                    <div class="sentiment-result">
+                        <span id="sentiment-text" style="font-weight: 700; font-size: 1.1rem; color: var(--text-heading); white-space: pre-wrap;">&lt; sentiment &gt;  &lt; x+ &gt;</span>
+                        <div class="stars-container" id="sentiment-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // --- UPDATED LOGIC ---
+        let isReportLoaded = false;
+        let currentView = 'default'; // default, report, error
+
+        function openModal() {
+            document.getElementById('uploadModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('uploadModal').classList.remove('active');
+        }
+
+        function submitUrl() {
+            const url = document.getElementById('reportUrlInput').value.trim();
+            const defaultView = document.getElementById('dashboard-default');
+            const reportView = document.getElementById('dashboard-report');
+            const errorView = document.getElementById('dashboard-error');
+
+            // Simple dummy logic: Check if empty or contains "error"
+            if (!url || url.toLowerCase().includes('error')) {
+                // Show Error Overlay
+                defaultView.classList.add('hidden');
+                reportView.classList.add('hidden');
+                errorView.classList.remove('hidden');
+                currentView = 'error';
+                isReportLoaded = false;
+            } else {
+                // Show Report View
+                defaultView.classList.add('hidden');
+                errorView.classList.add('hidden');
+                reportView.classList.remove('hidden');
+                currentView = 'report';
+                isReportLoaded = true;
+            }
+            closeModal();
+        }
+
+        function toggleReport() {
+            const defaultView = document.getElementById('dashboard-default');
+            const reportView = document.getElementById('dashboard-report');
+            const errorView = document.getElementById('dashboard-error');
+            const eyeBtn = document.getElementById('eyeBtn');
+
+            if (isReportLoaded) {
+                if (currentView === 'report') {
+                    // Hide report, show default
+                    reportView.classList.add('hidden');
+                    defaultView.classList.remove('hidden');
+                    currentView = 'default';
+                    // Eye Crossed
+                    eyeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+                } else {
+                    // Show report, hide default (or error)
+                    defaultView.classList.add('hidden');
+                    errorView.classList.add('hidden');
+                    reportView.classList.remove('hidden');
+                    currentView = 'report';
+                    // Eye Open
+                    eyeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+                }
+            } else {
+                if (currentView === 'error') {
+                    errorView.classList.add('hidden');
+                    defaultView.classList.remove('hidden');
+                    currentView = 'default';
+                }
+            }
+        }
+
+        function downloadReport() {
+            alert("Downloading report...");
+        }
+
+        function handleFetch() {
+            const btn = document.getElementById('fetchBtn');
+            if (btn.innerText.includes("Enter")) {
+                btn.innerText = "< Loading >";
+                btn.style.cursor = "wait";
+                setTimeout(() => {
+                    btn.innerText = "< Download >";
+                    btn.style.cursor = "pointer";
+                }, 2000);
+            }
+        }
+
+        async function handlePredict() {
+            const btn = document.getElementById('predictBtn');
+            const textEl = document.getElementById('sentiment-text');
+            const starsEl = document.getElementById('sentiment-stars');
+            const stars = starsEl.children;
+
+            btn.innerText = "< Processing >";
+            btn.style.cursor = "wait";
+            textEl.className = '';
+
+            const title = document.getElementById('review_title_input').value.trim();
+            const t1 = document.getElementById('review_text_1').value.trim();
+            const t2 = document.getElementById('review_text_2').value.trim();
+            const t3 = document.getElementById('review_text_3').value.trim();
+            const review_text = [t1, t2, t3].filter(Boolean).join(' ');
+
+            if (!title && !review_text) {
+                textEl.innerText = 'Provide a review title or text.';
+                textEl.className = 'sent-neu';
+                btn.innerText = "< Predict >";
+                btn.style.cursor = "pointer";
+                return;
+            }
+
+            try {
+                const res = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ review_title: title, review_text: review_text })
+                });
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(text || res.statusText);
+                }
+
+                const data = await res.json();
+                const predicted = (data.predicted_sentiment || '').toLowerCase();
+
+                // reset stars
+                for (let s of stars) s.className = 'star';
+
+                if (predicted.includes('positive')) {
+                    textEl.innerText = data.predicted_sentiment;
+                    textEl.className = 'sent-pos';
+                    stars[0].className = 'star filled pos light-dark';
+                    stars[1].className = 'star filled pos light-dark';
+                    stars[2].className = 'star filled pos light-dark';
+                    stars[3].className = 'star filled pos medium-dark';
+                    stars[4].className = 'star filled pos darkest';
+                } else if (predicted.includes('neutral')) {
+                    textEl.innerText = data.predicted_sentiment;
+                    textEl.className = 'sent-neu';
+                    stars[0].className = 'star filled neu light-dark';
+                    stars[1].className = 'star filled neu darkest';
+                    stars[2].className = 'star filled neu darkest';
+                } else if (predicted.includes('negative')) {
+                    textEl.innerText = data.predicted_sentiment;
+                    textEl.className = 'sent-neg';
+                    stars[0].className = 'star filled neg darkest';
+                } else {
+                    textEl.innerText = data.predicted_sentiment || 'Unknown';
+                }
+
+            } catch (err) {
+                console.error('Predict error', err);
+                textEl.innerText = 'Prediction failed';
+                textEl.className = 'sent-neu';
+            } finally {
+                btn.innerText = "< Predict >";
+                btn.style.cursor = "pointer";
+            }
+        }
+
+        document.querySelectorAll('.auto-tab').forEach((input, index, inputs) => {
+            input.addEventListener('input', () => {
+                if (input.value.length >= input.maxLength) {
+                    const next = inputs[index + 1];
+                    if (next) next.focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value.length === 0) {
+                    const prev = inputs[index - 1];
+                    if (prev) {
+                        prev.focus();
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

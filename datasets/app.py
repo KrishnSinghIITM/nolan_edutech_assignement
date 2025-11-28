@@ -7,7 +7,13 @@ from nltk.stem import WordNetLemmatizer
 from scipy.sparse import hstack
 from flask import Flask, request, jsonify
 
+# Allow cross-origin requests from the web app
+from flask_cors import CORS
+
 app = Flask(__name__)
+
+# Enable CORS for all routes (adjust origins in production)
+CORS(app)
 
 # --- Configuration --- #
 # Set the path where models and vectorizers are stored
